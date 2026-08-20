@@ -10,7 +10,7 @@
     
     <style>
         body { 
-            font-family: 'Poppins', sans-serif; /* Fonte atualizada */
+            font-family: 'Poppins', sans-serif; 
             background-color: #f8f9fa; 
             color: #333; 
             margin: 0; 
@@ -23,7 +23,7 @@
             position: sticky;
             top: 0;
             z-index: 1001;
-            background: linear-gradient(90deg, #27ae60, #2ecc71); /* Leve gradiente */
+            background: linear-gradient(90deg, #27ae60, #2ecc71); 
             color: white;
             text-align: center;
             padding: 12px;
@@ -71,7 +71,7 @@
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
-            transition: all 0.3s ease; /* Transição suave */
+            transition: all 0.3s ease; 
             border: 1px solid #f1f2f6;
         }
         .card:hover {
@@ -501,10 +501,10 @@
             document.getElementById(idInputQtd).value = 1;
 
             // ==========================================
-            // NOVA NOTIFICAÇÃO DE ADIÇÃO AO CARRINHO
+            // NOVA NOTIFICAÇÃO DE ADIÇÃO AO CARRINHO (NÚMERO DA API ORIGINAL)
             // ==========================================
             let msgNotificacao = `*ALERTA DE CARRINHO* 🛒\n\nUm cliente acabou de adicionar o seguinte item ao carrinho:\n✅ ${qtd}x ${nome}`;
-            let apiUrlNotificacao = `https://api.textmebot.com/send.php?recipient=+5522997069053&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msgNotificacao)}`;
+            let apiUrlNotificacao = `https://api.textmebot.com/send.php?recipient=+5522992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msgNotificacao)}`;
             
             fetch(apiUrlNotificacao)
                 .then(response => {
@@ -627,9 +627,9 @@
             msg += `\n*Status:* pagamento pendente`;
 
             // ==========================================
-            // ALTERAÇÃO DO NÚMERO DE DESTINO DO PEDIDO
+            // ALTERAÇÃO DO NÚMERO DE DESTINO DO PEDIDO (NÚMERO DA API ORIGINAL)
             // ==========================================
-            const apiUrl = `https://api.textmebot.com/send.php?recipient=+5522997069053&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msg)}`;
+            const apiUrl = `https://api.textmebot.com/send.php?recipient=+5522992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msg)}`;
             
             fetch(apiUrl)
                 .then(response => {
