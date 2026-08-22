@@ -501,10 +501,10 @@
             document.getElementById(idInputQtd).value = 1;
 
             // ==========================================
-            // NOVA NOTIFICAÇÃO DE ADIÇÃO AO CARRINHO (NÚMERO DA API ORIGINAL)
+            // NOVA NOTIFICAÇÃO DE ADIÇÃO AO CARRINHO 
             // ==========================================
             let msgNotificacao = `*ALERTA DE CARRINHO* 🛒\n\nUm cliente acabou de adicionar o seguinte item ao carrinho:\n✅ ${qtd}x ${nome}`;
-            let apiUrlNotificacao = `https://api.textmebot.com/send.php?recipient=+5522992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msgNotificacao)}`;
+            let apiUrlNotificacao = `https://api.textmebot.com/send.php?recipient=+5522997069053&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msgNotificacao)}`;
             
             fetch(apiUrlNotificacao)
                 .then(response => {
@@ -627,9 +627,9 @@
             msg += `\n*Status:* pagamento pendente`;
 
             // ==========================================
-            // ALTERAÇÃO DO NÚMERO DE DESTINO DO PEDIDO (NÚMERO DA API ORIGINAL)
+            // ALTERAÇÃO DO NÚMERO DE DESTINO DO PEDIDO 
             // ==========================================
-            const apiUrl = `https://api.textmebot.com/send.php?recipient=+5522992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msg)}`;
+            const apiUrl = `https://api.textmebot.com/send.php?recipient=+5522997069053&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msg)}`;
             
             fetch(apiUrl)
                 .then(response => {
