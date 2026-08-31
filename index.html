@@ -166,7 +166,6 @@
         .btn-whats { background: linear-gradient(135deg, #25D366, #1ebd5a); color: white; border: none; padding: 16px; width: 100%; border-radius: 8px; font-size: 1.2em; cursor: pointer; font-weight: 700; margin-top: 15px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: transform 0.2s; }
         .btn-whats:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); }
 
-        /* Otimização do tamanho do relógio/hora para exibir a opção "Definir" em mobile */
         input[type="time"] {
             font-size: 0.9em;
             padding: 8px 10px;
@@ -494,7 +493,6 @@
     </div>
 
     <script>
-        // Função para aumentar ou diminuir a quantidade no card
         function mudarQtd(idInput, valor) {
             let input = document.getElementById(idInput);
             let novaQtd = parseInt(input.value) + valor;
@@ -503,7 +501,6 @@
             }
         }
 
-        // Função do ViaCEP que busca o bairro/cidade com base SOMENTE no CEP
         function buscarCEP() {
             let cepInput = document.getElementById('cli-cep').value;
             let cepLimpo = cepInput.replace(/\D/g, ''); 
@@ -568,20 +565,12 @@
             
             document.getElementById(idInputQtd).value = 1;
 
-            // ==========================================
-            // NOTIFICAÇÃO DE ADIÇÃO AO CARRINHO 
-            // ==========================================
             let msgNotificacao = `*ALERTA DE CARRINHO* 🛒\n\nUm cliente acabou de adicionar o seguinte item ao carrinho:\n✅ ${qtd}x ${nome}`;
             let apiUrlNotificacao = `https://api.textmebot.com/send.php?recipient=+5522997069053&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msgNotificacao)}`;
             
             fetch(apiUrlNotificacao)
-                .then(response => {
-                    console.log("Notificação de carrinho enviada!");
-                })
-                .catch(error => {
-                    console.error("Erro ao enviar notificação de carrinho:", error);
-                });
-            // ==========================================
+                .then(response => { console.log("Notificação de carrinho enviada!"); })
+                .catch(error => { console.error("Erro ao enviar notificação de carrinho:", error); });
         }
 
         function atualizarCarrinhoHTML() {
@@ -674,7 +663,7 @@
             });
         }
 
-        function enviarPedidoWhatsApp() {
+        async function enviarPedidoWhatsApp() {
             if (carrinho.length === 0) {
                 alert("Adicione produtos ao carrinho primeiro!");
                 return;
@@ -704,6 +693,56 @@
                 valorCobrar = valores.totalFinal / 2;
             }
 
+            // Exibir carregamento no modal
+            const conteudoModal = document.getElementById('conteudo-modal');
+            conteudoModal.innerHTML = `
+                <div style="text-align: center; padding: 40px 10px;">
+                    <h3 style="color: #2c3e50; font-size: 1.2em;">Gerando cobrança PIX...</h3>
+                    <p style="color: #747d8c; font-size: 0.9em;">Aguarde um instante enquanto conectamos ao sistema de pagamento.</p>
+                </div>
+            `;
+
+            let qrcodeUrl = "";
+            let pixCopiaCola = "";
+
+            // Chamada à API no Cloudflare Workers
+            try {
+                const proxyUrl = 'https://shy-shadow-b53e.paypal970690.workers.dev/';
+                const clientId = "ep_3494f9fae8d92e2463294ac2e28e0266";
+                const clientSecret = "eps_9df1cdc2257b5749b385d796347dadfc06f648153c7d26790dc06b3a9cd281d0";
+
+                const response = await fetch(proxyUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-client-id': clientId,
+                        'x-client-secret': clientSecret
+                    },
+                    body: JSON.stringify({
+                        amount: parseFloat(valorCobrar.toFixed(2)),
+                        description: "Aluguel de Equipamentos para Festa",
+                        payerName: nome,
+                        payerDocument: "12345678900"
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    qrcodeUrl = data.qrcodeUrl;
+                    pixCopiaCola = data.copyPaste;
+                } else {
+                    alert("Erro ao gerar PIX via API: " + (data.message || "Tente novamente."));
+                    location.reload();
+                    return;
+                }
+            } catch (err) {
+                console.error("Erro na comunicação com a API de PIX:", err);
+                alert("Erro ao conectar com a API de pagamento.");
+                location.reload();
+                return;
+            }
+
             let msg = `*NOVO PEDIDO DE ALUGUEL* 🥳\n\n`;
             msg += `*Cliente:* ${nome}\n`;
             msg += `*WhatsApp do Cliente:* ${whats}\n`;
@@ -730,20 +769,16 @@
             msg += `\n\n*TOTAL:* R$ ${valores.totalFinal.toFixed(2)}`;
             msg += `\n*Forma de Pagamento:* ${opcaoPagamento}`;
             msg += `\n*Valor a pagar agora:* R$ ${valorCobrar.toFixed(2)}`;
-            msg += `\n*Status:* Pagamento Gerado na Tela`;
+            msg += `\n*Status:* Pagamento Gerado via API`;
 
-            // Envio de notificação ao WhatsApp do Administrador quando clica em Finalizar Pedido
+            // Envio de notificação ao WhatsApp do Administrador
             const apiUrl = `https://api.textmebot.com/send.php?recipient=+5522997069053&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msg)}`;
             
             fetch(apiUrl)
                 .then(res => console.log("Notificação de pedido finalizado enviada!"))
                 .catch(err => console.error("Erro ao notificar finalização:", err));
 
-            // Exemplo de código PIX Copia e Cola gerado para exibição na tela
-            const pixCopiaCola = "00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865405" + valorCobrar.toFixed(2) + "5802BR5913FESTA ANIMADA6009CAMPOS GOY62070503***6304E2CA";
-
-            // Renderizar a tela de pagamento diretamente no modal
-            const conteudoModal = document.getElementById('conteudo-modal');
+            // Renderizar a tela de pagamento diretamente no modal com os dados reais retornados pela API
             conteudoModal.innerHTML = `
                 <span class="fechar-modal" onclick="fecharModal()">&times;</span>
                 <div class="pix-container">
@@ -756,7 +791,7 @@
                     </div>
 
                     <div style="margin: 15px 0;">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(pixCopiaCola)}" alt="QR Code PIX" style="border: 1px solid #dfe4ea; border-radius: 8px; padding: 5px;">
+                        <img src="${qrcodeUrl}" alt="QR Code PIX" style="border: 1px solid #dfe4ea; border-radius: 8px; padding: 5px; max-width: 200px;">
                     </div>
 
                     <p style="font-weight:600; font-size:0.9em; margin-bottom:5px;">Pix Copia e Cola:</p>
