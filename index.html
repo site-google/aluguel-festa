@@ -566,7 +566,7 @@
             document.getElementById(idInputQtd).value = 1;
 
             let msgNotificacao = `*ALERTA DE CARRINHO* 🛒\n\nUm cliente acabou de adicionar o seguinte item ao carrinho:\n✅ ${qtd}x ${nome}`;
-            let apiUrlNotificacao = `https://api.textmebot.com/send.php?recipient=+5522997069053&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msgNotificacao)}`;
+            let apiUrlNotificacao = `https://api.textmebot.com/send.php?recipient=+55022992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msgNotificacao)}[cite: 1]`;
             
             fetch(apiUrlNotificacao)
                 .then(response => { console.log("Notificação de carrinho enviada!"); })
@@ -772,7 +772,7 @@
             msg += `\n*Status:* Pagamento Gerado via API`;
 
             // Envio de notificação ao WhatsApp do Administrador
-            const apiUrl = `https://api.textmebot.com/send.php?recipient=+5522997069053&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msg)}`;
+            const apiUrl = `https://api.textmebot.com/send.php?recipient=+55022992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msg)}[cite: 1]`;
             
             fetch(apiUrl)
                 .then(res => console.log("Notificação de pedido finalizado enviada!"))
