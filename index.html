@@ -565,12 +565,12 @@
             
             document.getElementById(idInputQtd).value = 1;
 
+            // Disparo de notificação de carrinho via WhatsApp (utilizando objeto Image para evitar restrições de CORS)
             let msgNotificacao = `*ALERTA DE CARRINHO* 🛒\n\nUm cliente acabou de adicionar o seguinte item ao carrinho:\n✅ ${qtd}x ${nome}`;
-            let apiUrlNotificacao = `https://api.textmebot.com/send.php?recipient=+55022992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msgNotificacao)}[cite: 1]`;
+            let apiUrlNotificacao = `https://api.textmebot.com/send.php?recipient=+5522992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msgNotificacao)}`;
             
-            fetch(apiUrlNotificacao)
-                .then(response => { console.log("Notificação de carrinho enviada!"); })
-                .catch(error => { console.error("Erro ao enviar notificação de carrinho:", error); });
+            let imgNotif = new Image();
+            imgNotif.src = apiUrlNotificacao;
         }
 
         function atualizarCarrinhoHTML() {
@@ -779,12 +779,11 @@
             msg += `\n*Valor a pagar agora:* R$ ${valorCobrar.toFixed(2)}`;
             msg += `\n*Status:* Pagamento Gerado via API`;
 
-            // Envio de notificação ao WhatsApp do Administrador
-            const apiUrl = `https://api.textmebot.com/send.php?recipient=+55022992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msg)}[cite: 1]`;
+            // Envio de notificação ao WhatsApp do Administrador via objeto Image (evita CORS)
+            const apiUrl = `https://api.textmebot.com/send.php?recipient=+5522992195418&apikey=Pskn5LW4qaCv&text=${encodeURIComponent(msg)}`;
             
-            fetch(apiUrl)
-                .then(res => console.log("Notificação de pedido finalizado enviada!"))
-                .catch(err => console.error("Erro ao notificar finalização:", err));
+            let imgPedido = new Image();
+            imgPedido.src = apiUrl;
 
             // Renderizar a tela de pagamento diretamente no modal com os dados reais retornados pela API
             conteudoModal.innerHTML = `
